@@ -19,11 +19,7 @@ const clearButton = document.querySelector('.clear-grid');
 clearButton.addEventListener('click', function() {
     let confirmClear = confirm('Are you sure you want to clear the grid?');
     if(confirmClear) {
-        let cells = document.querySelectorAll('.cell-visited');
-        
-        cells.forEach(function(cell) {
-            cell.classList.remove('cell-visited');
-        })
+        clearCells();
     }
 })
 
@@ -42,8 +38,33 @@ function createGrid(cellsInRow) {
         cell.classList.add('cell', `cell-${i}`);
         cell.style.width = cell.style.height = `${cellWidth}px`;
         cell.addEventListener('mouseenter', function() {
-            this.classList.add('cell-visited');
+            cellVisited(this, 'green');
+            cell.classList.add('cell-visited');
         })
         grid.appendChild(cell);
     }
+}
+
+function cellVisited(cell, color) {
+    cell.style.backgroundColor = color;
+    cell.style.borderColor = color;
+    let op = parseFloat(cell.style.opacity);
+    
+    if(!op) cell.style.opacity = 0.1;
+    else if(op >= 1) return;
+    cell.style.opacity = op + 0.1;
+}
+
+function clearCell(cell) {
+    cell.style.backgroundColor = '';
+    cell.style.borderColor = '';
+    cell.style.opacity = '';
+}
+
+function clearCells() {
+    let cells = document.querySelectorAll('.cell-visited');
+    cells.forEach(function(cell) {
+        cell.classList.remove('cell-visited');
+        clearCell(cell);
+    })
 }
